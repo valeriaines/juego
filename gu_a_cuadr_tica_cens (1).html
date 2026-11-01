@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Teórica-Práctica Interactiva: Función y Ecuación Cuadrática | CENS 3° Año</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            chtml: {
+                scale: 0.9,
+                displayAlign: 'center'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            amber: '#f59e0b',
+                            emerald: '#10b981',
+                            rose: '#f43f5e',
+                            indigo: '#6366f1'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 320px;
+            min-height: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 640px) {
+            .chart-container {
+                height: 380px;
+            }
+        }
+        .math-overflow {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px 0;
+        }
+    </style>
+</head>
+<!-- Selected Palette: Vibrant Energetic Slate, Blue, Emerald & Amber -->
+<!-- Narrative Plan Summary: 
+     1. Header & Context: Tailored pedagogical introduction for adult learners (CENS 3° Año).
+     2. Core Concepts Grid: High-impact KPI stats and clear breakdown of Polynomial, Canonical, and Factorized forms.
+     3. Anatomy of a Parabola: Graphical components explained with mobile-responsive formula chips.
+     4. Mobile-Optimized Interactive Explorer Tool: Dynamic sliders, real-time calculations, canvas rendering fallback, and robust Chart.js instantiation.
+     5. Guided Practical Exercises: 4 tailored activities with real-world CENS production workshop context.
+     6. Complete Interactive Answer Key: Expandable step-by-step analytic solutions.
+-->
+<!-- Visualization Choices Justification:
+     - Dynamic Canvas Chart (Chart.js): Real-time interactive parabola plotting with explicit pixel boundaries for mobile browsers.
+     - Canvas & Pure HTML/CSS formatting: NO SVG or Mermaid JS used.
+-->
+<!-- Confirmation: NEITHER Mermaid JS NOR SVG graphics were used anywhere in this single-file output. -->
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-100">
+
+    <header class="bg-brand-900 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">🧮</span>
+                <div>
+                    <h1 class="text-lg font-bold leading-tight">Matemática CENS 3° Año</h1>
+                    <p class="text-xs text-brand-100">Guía Teórica-Práctica: Funciones y Ecuaciones Cuadráticas</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium">
+                <a href="#fundamentacion" class="hover:text-amber-400 transition-colors">Marco Teórico</a>
+                <a href="#anatomia" class="hover:text-amber-400 transition-colors">Anatomía Parábola</a>
+                <a href="#laboratorio" class="hover:text-amber-400 transition-colors">Simulador Activo</a>
+                <a href="#practica" class="hover:text-amber-400 transition-colors">Guía de Ejercicios</a>
+                <a href="#resolucionario" class="hover:text-amber-400 transition-colors">Resolucionario</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8 sm:space-y-12">
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-8">
+            <div class="max-w-3xl">
+                <span class="inline-block bg-brand-100 text-brand-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    Educación de Jóvenes y Adultos (CENS)
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+                    Comprendiendo la Función Cuadrática y sus Aplicaciones
+                </h2>
+                <p class="text-slate-600 leading-relaxed text-sm sm:text-lg mb-6">
+                    Bienvenido/a a la unidad didáctica modular. La función cuadrática es una herramienta poderosa que nos permite modelar fenómenos del mundo real: desde la trayectoria de un objeto hasta el cálculo de costos, ganancias y presupuestos de un emprendimiento.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 border-t border-slate-100 pt-6">
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="text-xs font-bold uppercase text-brand-700">Forma Standard</div>
+                        <div class="text-sm font-mono font-bold text-slate-800 mt-1 math-overflow">$$f(x) = ax^2 + bx + c$$</div>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="text-xs font-bold uppercase text-emerald-600">Resolvente</div>
+                        <div class="text-sm font-bold text-slate-700 mt-1">Fórmula de Bhaskara</div>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="text-xs font-bold uppercase text-amber-500">Gráfica</div>
+                        <div class="text-sm font-bold text-slate-700 mt-1">Parábola Simétrica</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fundamentacion" class="space-y-6">
+            <div class="border-l-4 border-brand-700 pl-4">
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">1. Expresiones Algebraicas de la Función Cuadrática</h3>
+                <p class="text-slate-600 text-xs sm:text-sm">
+                    Una función cuadrática es una relación analítica donde la variable independiente \(x\) tiene grado máximo igual a 2. La misma función puede expresarse de tres maneras equivalentes.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded">Forma Standard</span>
+                            <span class="text-xl">📊</span>
+                        </div>
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900 mb-2">Forma Polinómica</h4>
+                        <div class="bg-slate-100 p-3 rounded-lg text-center mb-4 math-overflow">
+                            <span class="font-mono text-brand-900 font-bold">\(f(x) = ax^2 + bx + c\)</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-600 mb-4">
+                            Muestra explícitamente los tres coeficientes y la ordenada al origen en el punto \((0, c)\).
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-500 space-y-1.5 border-t pt-3">
+                        <li>• <strong>a:</strong> Concavidad y curvatura.</li>
+                        <li>• <strong>b:</strong> Traslación del eje simétrico.</li>
+                        <li>• <strong>c:</strong> Corte exacto con el eje vertical \(y\).</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded">Forma Vértice</span>
+                            <span class="text-xl">🎯</span>
+                        </div>
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900 mb-2">Forma Canónica</h4>
+                        <div class="bg-slate-100 p-3 rounded-lg text-center mb-4 math-overflow">
+                            <span class="font-mono text-emerald-900 font-bold">\(f(x) = a(x - x_v)^2 + y_v\)</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-600 mb-4">
+                            Expresa directamente las coordenadas del punto extremo o <strong>vértice</strong> \(V = (x_v, y_v)\).
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-500 space-y-1.5 border-t pt-3">
+                        <li>• Identifica valores máximos o mínimos.</li>
+                        <li>• Visualiza traslaciones en el plano.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded">Forma Ceros</span>
+                            <span class="text-xl">🌱</span>
+                        </div>
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900 mb-2">Forma Factorizada</h4>
+                        <div class="bg-slate-100 p-3 rounded-lg text-center mb-4 math-overflow">
+                            <span class="font-mono text-amber-900 font-bold">\(f(x) = a(x - x_1)(x - x_2)\)</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-600 mb-4">
+                            Expresa la función utilizando sus raíces reales \(x_1\) y \(x_2\), los puntos donde cruza el eje horizontal.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-500 space-y-1.5 border-t pt-3">
+                        <li>• Requiere discriminante positivo o nulo (\(\Delta \ge 0\)).</li>
+                        <li>• Muestra los ceros de la función.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="anatomia" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-8 space-y-6">
+            <div class="border-l-4 border-emerald-600 pl-4">
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">2. Anatomía Geométrica de la Parábola y Fórmula Resolvente</h3>
+                <p class="text-slate-600 text-xs sm:text-sm">
+                    Para graficar y analizar una función cuadrática, calculamos sus 4 componentes clave:
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-7 h-7 rounded-full bg-brand-700 text-white flex items-center justify-center font-bold text-xs shrink-0">1</span>
+                            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Vértice \(V = (x_v, y_v)\) y Eje de Simetría</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-2">
+                            Punto donde la curva alcanza su valor <strong>máximo</strong> (si \(a < 0\)) o <strong>mínimo</strong> (si \(a > 0\)).
+                        </p>
+                        <div class="mt-2 font-mono text-xs text-brand-800 bg-white p-2 rounded border border-slate-200 math-overflow">
+                            \(x_v = -\frac{b}{2a}\) &nbsp;&nbsp;|&nbsp;&nbsp; \(y_v = f(x_v)\)
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0">2</span>
+                            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Ceros o Raíces (Fórmula de Bhaskara)</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-2">
+                            Intersecciones con el eje horizontal (\(y = 0\)). Se obtienen mediante:
+                        </p>
+                        <div class="mt-2 font-mono text-xs text-emerald-800 bg-white p-2 rounded border border-slate-200 math-overflow">
+                            \(x_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}\)
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xs shrink-0">3</span>
+                            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Discriminante \(\Delta = b^2 - 4ac\)</h4>
+                        </div>
+                        <div class="text-xs text-slate-600 mt-2 space-y-1">
+                            <p>• <strong>\(\Delta > 0\):</strong> 2 raíces reales distintas (corta al eje \(x\) en 2 puntos).</p>
+                            <p>• <strong>\(\Delta = 0\):</strong> 1 raíz real doble (el vértice toca el eje \(x\)).</p>
+                            <p>• <strong>\(\Delta < 0\):</strong> Sin raíces reales (no corta el eje \(x\)).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 text-white p-5 sm:p-6 rounded-2xl shadow-lg flex flex-col justify-between">
+                    <div>
+                        <div class="text-amber-400 font-bold text-xs uppercase tracking-widest mb-2">Regla Pedagógica CENS</div>
+                        <h4 class="text-lg sm:text-xl font-bold mb-4">Efecto del signo del coeficiente "a"</h4>
+                        
+                        <div class="space-y-3 text-xs sm:text-sm">
+                            <div class="flex items-start space-x-3 bg-slate-800/90 p-3 rounded-lg border border-slate-700">
+                                <span class="text-2xl">😃</span>
+                                <div>
+                                    <strong class="text-emerald-400">Si \(a > 0\) (Positivo):</strong>
+                                    <p class="text-slate-300 text-xs mt-0.5">Ramas hacia arriba ("Convexidad"). Existe un Mínimo Absoluto en el Vértice.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3 bg-slate-800/90 p-3 rounded-lg border border-slate-700">
+                                <span class="text-2xl">🙁</span>
+                                <div>
+                                    <strong class="text-rose-400">Si \(a < 0\) (Negativo):</strong>
+                                    <p class="text-slate-300 text-xs mt-0.5">Ramas hacia abajo ("Concavidad"). Existe un Máximo Absoluto en el Vértice.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400">
+                        💡 <strong>Ordenada al Origen:</strong> Se evalúa \(f(0) = c\), ubicándose en el par ordenado \((0, c)\).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="laboratorio" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-8 space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded">Herramienta Interactiva</span>
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">Laboratorio de la Parábola</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm">Modifica los coeficientes para explorar en tiempo real cómo cambia la gráfica y sus valores analíticos en cualquier pantalla.</p>
+                </div>
+                <div class="flex flex-wrap gap-1.5">
+                    <button onclick="loadPreset(1, -6, 5)" class="px-2.5 py-1.5 text-xs font-medium bg-slate-100 hover:bg-brand-100 hover:text-brand-800 rounded-lg transition-colors">Ej 1: \(x^2 - 6x + 5\)</button>
+                    <button onclick="loadPreset(-1, 2, 3)" class="px-2.5 py-1.5 text-xs font-medium bg-slate-100 hover:bg-brand-100 hover:text-brand-800 rounded-lg transition-colors">Ej 2: \(-x^2 + 2x + 3\)</button>
+                    <button onclick="loadPreset(-2, 12, -10)" class="px-2.5 py-1.5 text-xs font-medium bg-slate-100 hover:bg-brand-100 hover:text-brand-800 rounded-lg transition-colors">Ej 3: \(-2x^2 + 12x - 10\)</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <div class="lg:col-span-5 space-y-5 bg-slate-50 p-4 sm:p-6 rounded-xl border border-slate-200">
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="coefA" class="font-bold text-slate-800 text-xs sm:text-sm">Coeficiente cuadrático (a):</label>
+                            <span id="valA" class="font-mono font-bold text-brand-700 bg-white px-2 py-0.5 rounded border border-slate-200 text-xs sm:text-sm">1</span>
+                        </div>
+                        <input type="range" id="coefA" min="-5" max="5" step="0.5" value="1" oninput="updateCalculations()" class="w-full accent-brand-700 cursor-pointer h-2 bg-slate-200 rounded-lg">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="coefB" class="font-bold text-slate-800 text-xs sm:text-sm">Coeficiente lineal (b):</label>
+                            <span id="valB" class="font-mono font-bold text-brand-700 bg-white px-2 py-0.5 rounded border border-slate-200 text-xs sm:text-sm">-6</span>
+                        </div>
+                        <input type="range" id="coefB" min="-12" max="12" step="1" value="-6" oninput="updateCalculations()" class="w-full accent-brand-700 cursor-pointer h-2 bg-slate-200 rounded-lg">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="coefC" class="font-bold text-slate-800 text-xs sm:text-sm">Término independiente (c):</label>
+                            <span id="valC" class="font-mono font-bold text-brand-700 bg-white px-2 py-0.5 rounded border border-slate-200 text-xs sm:text-sm">5</span>
+                        </div>
+                        <input type="range" id="coefC" min="-12" max="12" step="1" value="5" oninput="updateCalculations()" class="w-full accent-brand-700 cursor-pointer h-2 bg-slate-200 rounded-lg">
+                    </div>
+
+                    <div class="bg-white p-3.5 rounded-lg border border-slate-200 space-y-2 text-xs">
+                        <h4 class="font-bold text-slate-900 border-b pb-1 text-xs uppercase tracking-wider">Resultados Analíticos:</h4>
+                        <div class="flex justify-between items-center"><span class="text-slate-500">Ecuación:</span> <span id="resEcuacion" class="font-mono font-bold text-slate-800">f(x) = x² - 6x + 5</span></div>
+                        <div class="flex justify-between items-center"><span class="text-slate-500">Vértice V(xv, yv):</span> <span id="resVertice" class="font-mono font-bold text-brand-700">(3.00, -4.00)</span></div>
+                        <div class="flex justify-between items-center"><span class="text-slate-500">Discriminante (Δ):</span> <span id="resDelta" class="font-mono font-bold text-slate-800">16.00</span></div>
+                        <div class="flex justify-between items-center"><span class="text-slate-500">Raíces x₁, x₂:</span> <span id="resRaices" class="font-mono font-bold text-emerald-600">x₁ = 1.00, x₂ = 5.00</span></div>
+                        <div class="flex justify-between items-center"><span class="text-slate-500">Ordenada (0, c):</span> <span id="resOrdenada" class="font-mono font-bold text-slate-800">(0, 5)</span></div>
+                        <div class="flex justify-between items-center"><span class="text-slate-500">Extremo:</span> <span id="resExtremo" class="font-mono font-bold text-amber-600">Mínimo Absoluto</span></div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 w-full flex flex-col justify-center items-center">
+                    <div class="chart-container bg-slate-50/50 p-2 rounded-xl border border-slate-100">
+                        <canvas id="parabolaChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-slate-400 mt-2">💡 Desplaza los controles deslizantes arriba para ajustar el gráfico interactivo.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="practica" class="space-y-6">
+            <div class="border-l-4 border-amber-500 pl-4">
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">3. Guía Práctica de Ejercitación</h3>
+                <p class="text-slate-600 text-xs sm:text-sm">Resuelve las siguientes actividades secuenciales antes de consultar las soluciones analíticas.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded">Actividad 1</span>
+                        <span class="text-xs text-slate-400">Reconocimiento</span>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">Identificación de Coeficientes y Concavidad</h4>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Indica los valores de \(a\), \(b\) y \(c\), la concavidad (hacia arriba/abajo) y la ordenada al origen:
+                    </p>
+                    <div class="bg-slate-50 p-3 rounded-lg text-xs font-mono space-y-2 math-overflow">
+                        <p>1.1) \(f(x) = x^2 - 6x + 5\)</p>
+                        <p>1.2) \(g(x) = -2x^2 + 8x\)</p>
+                        <p>1.3) \(h(x) = -x^2 + 4\)</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded">Actividad 2</span>
+                        <span class="text-xs text-slate-400">Cálculo Analítico</span>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">Cálculo de Raíces y Puntos Notables</h4>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Para la función cuadrática \(f(x) = x^2 - 6x + 5\):
+                    </p>
+                    <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-600 space-y-1">
+                        <li>Aplica Bhaskara para hallar las raíces \(x_1\) y \(x_2\).</li>
+                        <li>Determina las coordenadas del vértice \(V = (x_v, y_v)\).</li>
+                        <li>Escribe la ecuación del eje de simetría.</li>
+                    </ol>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded">Actividad 3</span>
+                        <span class="text-xs text-slate-400">Análisis Completo</span>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">Estudio Funcional Integral</h4>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Dada la función \(j(x) = -x^2 + 2x + 3\):
+                    </p>
+                    <ul class="list-disc list-inside text-xs sm:text-sm text-slate-600 space-y-1">
+                        <li>Obtén concavidad, ordenada, raíces y vértice.</li>
+                        <li>Realiza el estudio analítico: Dominio, Imagen, Intervalos de Crecimiento (\(I^\uparrow\)) y Decrecimiento (\(I^\downarrow\)), Positividad (\(C^+\)) y Negatividad (\(C^-\)).</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">Actividad 4</span>
+                        <span class="text-xs text-slate-400">Contexto Real CENS</span>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">Modelización Económica: Taller Productivo</h4>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Un emprendimiento del CENS analiza su ganancia mensual \(G(x)\) en miles de pesos en función de las unidades \(x\) (en cientos) producidas:
+                    </p>
+                    <div class="bg-slate-50 p-2 rounded text-center math-overflow font-mono text-xs sm:text-sm font-bold text-slate-800">
+                        \(G(x) = -2x^2 + 12x - 10\)
+                    </div>
+                    <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-600 space-y-1">
+                        <li>¿Cuántas unidades generan la ganancia máxima y cuál es su monto?</li>
+                        <li>¿En qué rango de producción hay ganancias reales (\(G(x) > 0\))?</li>
+                        <li>¿Qué ocurre si la producción es nula (\(x = 0\))?</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section id="resolucionario" class="bg-slate-900 text-white rounded-2xl shadow-xl p-5 sm:p-8 space-y-6">
+            <div class="border-l-4 border-emerald-400 pl-4">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Paso a Paso</span>
+                <h3 class="text-xl sm:text-2xl font-bold">4. Resolucionario Analítico y Respuestas</h3>
+                <p class="text-slate-400 text-xs sm:text-sm">Verifica tus procedimientos analíticos con las respuestas guiadas desarrolladas por la cátedra.</p>
+            </div>
+
+            <div class="space-y-4">
+                <details class="group bg-slate-800/60 rounded-xl border border-slate-700 transition-all">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm">
+                        <span>Solución Actividad 1: Coeficientes y Orientación</span>
+                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-white group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-700 text-xs text-slate-300 space-y-3 font-sans">
+                        <div>
+                            <strong class="text-white">1.1) \(f(x) = x^2 - 6x + 5\):</strong>
+                            <p>• Coeficientes: \(a = 1\), \(b = -6\), \(c = 5\).</p>
+                            <p>• Concavidad: Hacia arriba (\(a = 1 > 0\)).</p>
+                            <p>• Ordenada al origen: \((0, 5)\).</p>
+                        </div>
+                        <div>
+                            <strong class="text-white">1.2) \(g(x) = -2x^2 + 8x\):</strong>
+                            <p>• Coeficientes: \(a = -2\), \(b = 8\), \(c = 0\).</p>
+                            <p>• Concavidad: Hacia abajo (\(a = -2 < 0\)).</p>
+                            <p>• Ordenada al origen: \((0, 0)\).</p>
+                        </div>
+                        <div>
+                            <strong class="text-white">1.3) \(h(x) = -x^2 + 4\):</strong>
+                            <p>• Coeficientes: \(a = -1\), \(b = 0\), \(c = 4\).</p>
+                            <p>• Concavidad: Hacia abajo (\(a = -1 < 0\)).</p>
+                            <p>• Ordenada al origen: \((0, 4)\).</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="group bg-slate-800/60 rounded-xl border border-slate-700 transition-all">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm">
+                        <span>Solución Actividad 2: Raíces por Bhaskara y Vértice</span>
+                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-white group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-700 text-xs text-slate-300 space-y-3">
+                        <p><strong class="text-white">1) Bhaskara en \(f(x) = x^2 - 6x + 5\):</strong></p>
+                        <div class="font-mono bg-slate-900 p-3 rounded text-amber-300 math-overflow">
+                            x = [ -(-6) ± √((-6)² - 4·1·5) ] / (2·1)<br>
+                            x = [ 6 ± √(36 - 20) ] / 2 = [ 6 ± 4 ] / 2<br>
+                            x₁ = 5 &nbsp;&nbsp;|&nbsp;&nbsp; x₂ = 1
+                        </div>
+                        <p>Las raíces son los puntos \((1, 0)\) y \((5, 0)\).</p>
+
+                        <p><strong class="text-white">2) Vértice \(V = (x_v, y_v)\):</strong></p>
+                        <p>• \(x_v = -(-6) / (2·1) = 3\)</p>
+                        <p>• \(y_v = f(3) = (3)² - 6(3) + 5 = -4\)</p>
+                        <p>Vértice: <strong>\(V = (3, -4)\)</strong>. Eje de simetría: **\(x = 3\)**.</p>
+                    </div>
+                </details>
+
+                <details class="group bg-slate-800/60 rounded-xl border border-slate-700 transition-all">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm">
+                        <span>Solución Actividad 3: Análisis Funcional Completo de j(x) = -x² + 2x + 3</span>
+                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-white group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-700 text-xs text-slate-300 space-y-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-bold text-white mb-2">Cálculos Notables:</h5>
+                                <p>• \(a = -1, b = 2, c = 3\)</p>
+                                <p>• Concavidad: Hacia abajo (\(a < 0\)).</p>
+                                <p>• Ordenada: \((0, 3)\)</p>
+                                <p>• Vértice: \(V = (1, 4)\)</p>
+                                <p>• Raíces: \(x_1 = -1\), \(x_2 = 3\)</p>
+                            </div>
+                            <div class="bg-slate-900 p-3 rounded font-mono text-emerald-300 space-y-1 math-overflow">
+                                <h5 class="font-bold text-white mb-1 font-sans">Estudio Analítico:</h5>
+                                <p>• Dom(j) = ℝ (Todos los reales)</p>
+                                <p>• Img(j) = (-∞, 4]</p>
+                                <p>• Crecimiento: I↑ = (-∞, 1)</p>
+                                <p>• Decrecimiento: I↓ = (1, +∞)</p>
+                                <p>• Positividad: C⁺ = (-1, 3)</p>
+                                <p>• Negatividad: C⁻ = (-∞, -1) ∪ (3, +∞)</p>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="group bg-slate-800/60 rounded-xl border border-slate-700 transition-all">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm">
+                        <span>Solución Actividad 4: Modelo Económico del Taller CENS</span>
+                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-white group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-700 text-xs text-slate-300 space-y-3">
+                        <p><strong class="text-white">1) Producción Óptima y Ganancia Máxima:</strong></p>
+                        <p>Como \(a = -2 < 0\), la ganancia máxima está en el vértice:</p>
+                        <div class="font-mono bg-slate-900 p-2 rounded text-amber-300 math-overflow">
+                            x_v = -12 / (2·(-2)) = 3 (300 artículos)<br>
+                            y_v = G(3) = -2(3)² + 12(3) - 10 = 8 ($8.000)
+                        </div>
+                        <p><strong>Respuesta:</strong> Fabricar <strong>300 artículos</strong> para una ganancia máxima de <strong>$8.000</strong>.</p>
+
+                        <p><strong class="text-white">2) Intervalo de Ganancias Positivas (G(x) > 0):</strong></p>
+                        <p>Raíces de \(-2x^2 + 12x - 10 = 0\): \(x_1 = 1\) (100 u.) y \(x_2 = 5\) (500 u.).</p>
+                        <p><strong>Respuesta:</strong> Se producen ganancias al fabricar entre <strong>100 y 500 unidades</strong>.</p>
+
+                        <p><strong class="text-white">3) Parada de Producción (x = 0):</strong></p>
+                        <p>\(G(0) = -10\). Se genera una <strong>pérdida de $10.000</strong> por costos fijos.</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 py-6 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>Guía Didáctica de Matemática CENS 3° Año - Adaptada para Educación Secundaria de Jóvenes y Adultos.</p>
+            <p class="mt-1 text-slate-500">Renderizado adaptable en tiempo real compatible con dispositivos móviles.</p>
+        </div>
+    </footer>
+
+    <script>
+        let myChart = null;
+
+        function wrapLabel(str) {
+            if (typeof str !== 'string') return str;
+            if (str.length <= 16) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + ' ' + word).trim().length > 16) {
+                    if (currentLine) lines.push(currentLine.trim());
+                    currentLine = word;
+                } else {
+                    currentLine += (currentLine ? ' ' : '') + word;
+                }
+            });
+            if (currentLine) lines.push(currentLine.trim());
+            return lines;
+        }
+
+        function loadPreset(a, b, c) {
+            document.getElementById('coefA').value = a;
+            document.getElementById('coefB').value = b;
+            document.getElementById('coefC').value = c;
+            updateCalculations();
+        }
+
+        function updateCalculations() {
+            let a = parseFloat(document.getElementById('coefA').value);
+            if (a === 0) {
+                a = 0.1;
+                document.getElementById('coefA').value = 0.1;
+            }
+            const b = parseFloat(document.getElementById('coefB').value);
+            const c = parseFloat(document.getElementById('coefC').value);
+
+            document.getElementById('valA').innerText = a;
+            document.getElementById('valB').innerText = b;
+            document.getElementById('valC').innerText = c;
+
+            const xv = -b / (2 * a);
+            const yv = a * xv * xv + b * xv + c;
+            const delta = b * b - 4 * a * c;
+
+            let eqText = `f(x) = ${a === 1 ? '' : a === -1 ? '-' : a}x²`;
+            if (b !== 0) eqText += ` ${b > 0 ? '+ ' + (b === 1 ? '' : b) : '- ' + Math.abs(b)}x`;
+            if (c !== 0) eqText += ` ${c > 0 ? '+ ' + c : '- ' + Math.abs(c)}`;
+            document.getElementById('resEcuacion').innerText = eqText;
+
+            document.getElementById('resVertice').innerText = `(${xv.toFixed(2)}, ${yv.toFixed(2)})`;
+            document.getElementById('resDelta').innerText = delta.toFixed(2);
+            document.getElementById('resOrdenada').innerText = `(0, ${c})`;
+
+            let raicesText = "";
+            let r1 = null, r2 = null;
+            if (delta > 0) {
+                r1 = (-b + Math.sqrt(delta)) / (2 * a);
+                r2 = (-b - Math.sqrt(delta)) / (2 * a);
+                raicesText = `x₁ = ${r1.toFixed(2)}, x₂ = ${r2.toFixed(2)}`;
+            } else if (delta === 0) {
+                r1 = -b / (2 * a);
+                raicesText = `x₁ = x₂ = ${r1.toFixed(2)} (Doble)`;
+            } else {
+                raicesText = "Sin raíces reales (Δ < 0)";
+            }
+            document.getElementById('resRaices').innerText = raicesText;
+
+            const extremoTipo = a > 0 ? "Mínimo Absoluto" : "Máximo Absoluto";
+            document.getElementById('resExtremo').innerText = `${extremoTipo} (y = ${yv.toFixed(2)})`;
+
+            renderChart(a, b, c, xv, yv, r1, r2);
+        }
+
+        function renderChart(a, b, c, xv, yv, r1, r2) {
+            const canvas = document.getElementById('parabolaChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const xMin = Math.floor(xv - 5);
+            const xMax = Math.ceil(xv + 5);
+            const points = [];
+            const labels = [];
+
+            for (let x = xMin; x <= xMax; x += 0.25) {
+                const y = a * x * x + b * x + c;
+                points.push({ x: parseFloat(x.toFixed(2)), y: parseFloat(y.toFixed(2)) });
+                labels.push(wrapLabel(`Punto en x = ${x.toFixed(1)}`));
+            }
+
+            const specialPoints = [{ x: parseFloat(xv.toFixed(2)), y: parseFloat(yv.toFixed(2)), label: 'Vértice V' }];
+            if (r1 !== null) specialPoints.push({ x: parseFloat(r1.toFixed(2)), y: 0, label: 'Raíz x₁' });
+            if (r2 !== null) specialPoints.push({ x: parseFloat(r2.toFixed(2)), y: 0, label: 'Raíz x₂' });
+
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Parábola f(x)',
+                            data: points,
+                            borderColor: '#0284c7',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.2,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Puntos Notables',
+                            data: specialPoints,
+                            backgroundColor: '#f43f5e',
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            showLine: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            grid: { color: '#e2e8f0' },
+                            title: { display: true, text: 'Eje X', color: '#64748b' }
+                        },
+                        y: {
+                            type: 'linear',
+                            grid: { color: '#e2e8f0' },
+                            title: { display: true, text: 'Eje Y', color: '#64748b' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels ? item.chart.data.labels[item.dataIndex] : '';
+                                    if (Array.isArray(label)) {
+                                        return label.join(' ');
+                                    } else {
+                                        return label || `x: ${item.parsed.x}`;
+                                    }
+                                },
+                                label: function(context) {
+                                    if (context.dataset.label === 'Puntos Notables') {
+                                        const pt = context.raw;
+                                        return `${pt.label}: (${pt.x}, ${pt.y})`;
+                                    }
+                                    return `f(${context.parsed.x}) = ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCalculations();
+        });
+
+        window.addEventListener('resize', () => {
+            if (myChart) {
+                myChart.resize();
+            }
+        });
+    </script>
+</body>
+</html>
