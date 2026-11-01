@@ -1,722 +1,801 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" class="h-full bg-slate-900">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía Teórica-Práctica Interactiva: Función y Ecuación Cuadrática | CENS 3° Año</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Misión NTICx: Hackers de la Información - La Plata</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            },
-            chtml: {
-                scale: 0.9,
-                displayAlign: 'center'
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        accent: {
+                            dark: '#0f172a',
+                            card: '#1e293b',
+                            accent: '#0284c7',
+                            neon: '#38bdf8',
                             amber: '#f59e0b',
                             emerald: '#10b981',
-                            rose: '#f43f5e',
-                            indigo: '#6366f1'
+                            rose: '#f43f5e'
                         }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-short': 'bounce 0.5s ease-in-out 2'
                     }
                 }
             }
         }
     </script>
     <style>
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 100%;
-            height: 320px;
-            min-height: 300px;
-            margin-left: auto;
-            margin-right: auto;
+        /* Deshabilitar selección accidental y optimizar para celular */
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
-        @media (min-width: 640px) {
-            .chart-container {
-                height: 380px;
-            }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .math-overflow {
-            overflow-x: auto;
-            overflow-y: hidden;
-            max-width: 100%;
-            -webkit-overflow-scrolling: touch;
-            padding: 4px 0;
+        .btn-touch {
+            transition: transform 0.1s ease, background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .btn-touch:active {
+            transform: scale(0.96);
+        }
+        /* Custom scrollbar para cajas de texto */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 4px;
         }
     </style>
 </head>
-<!-- Selected Palette: Vibrant Energetic Slate, Blue, Emerald & Amber -->
-<!-- Narrative Plan Summary: 
-     1. Header & Context: Tailored pedagogical introduction for adult learners (CENS 3° Año).
-     2. Core Concepts Grid: High-impact KPI stats and clear breakdown of Polynomial, Canonical, and Factorized forms.
-     3. Anatomy of a Parabola: Graphical components explained with mobile-responsive formula chips.
-     4. Mobile-Optimized Interactive Explorer Tool: Dynamic sliders, real-time calculations, canvas rendering fallback, and robust Chart.js instantiation.
-     5. Guided Practical Exercises: 4 tailored activities with real-world CENS production workshop context.
-     6. Complete Interactive Answer Key: Expandable step-by-step analytic solutions.
--->
-<!-- Visualization Choices Justification:
-     - Dynamic Canvas Chart (Chart.js): Real-time interactive parabola plotting with explicit pixel boundaries for mobile browsers.
-     - Canvas & Pure HTML/CSS formatting: NO SVG or Mermaid JS used.
--->
-<!-- Confirmation: NEITHER Mermaid JS NOR SVG graphics were used anywhere in this single-file output. -->
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-100">
+<body class="h-full text-slate-100 flex flex-col justify-between overflow-x-hidden selection:bg-cyan-500 selection:text-white">
 
-    <header class="bg-brand-900 text-white sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <span class="text-2xl">🧮</span>
+    <!-- BARRA SUPERIOR DE ESTADO / HUD -->
+    <header class="w-full bg-slate-950/90 border-b border-slate-800 p-3 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-md mx-auto flex items-center justify-between gap-2">
+            <!-- Info Jugador -->
+            <div class="flex items-center gap-2">
+                <div class="w-9 h-9 rounded-full bg-cyan-600/30 border border-cyan-400/50 flex items-center justify-center text-cyan-300 font-bold text-sm shadow-inner" id="hud-avatar">
+                    <i class="fa-solid fa-user-ninja"></i>
+                </div>
                 <div>
-                    <h1 class="text-lg font-bold leading-tight">Matemática CENS 3° Año</h1>
-                    <p class="text-xs text-brand-100">Guía Teórica-Práctica: Funciones y Ecuaciones Cuadráticas</p>
+                    <h1 class="text-xs font-bold text-slate-200 leading-tight truncate max-w-[110px]" id="hud-name">Estudiante</h1>
+                    <span class="text-[10px] text-cyan-400 font-semibold block" id="hud-rank">Novato Digital</span>
                 </div>
             </div>
-            <nav class="hidden md:flex space-x-6 text-sm font-medium">
-                <a href="#fundamentacion" class="hover:text-amber-400 transition-colors">Marco Teórico</a>
-                <a href="#anatomia" class="hover:text-amber-400 transition-colors">Anatomía Parábola</a>
-                <a href="#laboratorio" class="hover:text-amber-400 transition-colors">Simulador Activo</a>
-                <a href="#practica" class="hover:text-amber-400 transition-colors">Guía de Ejercicios</a>
-                <a href="#resolucionario" class="hover:text-amber-400 transition-colors">Resolucionario</a>
-            </nav>
+
+            <!-- Vidas y Puntaje -->
+            <div class="flex items-center gap-3">
+                <!-- Vidas -->
+                <div class="flex items-center gap-1 bg-slate-900 px-2 py-1 rounded-full border border-slate-800">
+                    <i class="fa-solid fa-heart text-rose-500 text-xs animate-pulse"></i>
+                    <span class="text-xs font-black text-slate-200" id="hud-lives">3</span>
+                </div>
+
+                <!-- Puntos -->
+                <div class="flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full">
+                    <i class="fa-solid fa-coins text-amber-400 text-xs"></i>
+                    <span class="text-xs font-black text-amber-300" id="hud-score">0</span>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8 sm:space-y-12">
+    <!-- MAIN CONTAINER (PANTALLAS) -->
+    <main class="flex-1 max-w-md w-full mx-auto p-4 flex flex-col justify-center relative">
 
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-8">
-            <div class="max-w-3xl">
-                <span class="inline-block bg-brand-100 text-brand-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
-                    Educación de Jóvenes y Adultos (CENS)
-                </span>
-                <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-                    Comprendiendo la Función Cuadrática y sus Aplicaciones
+        <!-- PANTALLA 1: INICIO / REGISTRO -->
+        <section id="screen-welcome" class="space-y-5 my-auto">
+            <div class="text-center space-y-2">
+                <div class="inline-block p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl mb-1 shadow-lg shadow-cyan-500/10">
+                    <i class="fa-solid fa-shield-halved text-4xl text-cyan-400 animate-pulse"></i>
+                </div>
+                <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 uppercase tracking-tight">
+                    Misión NTICx
                 </h2>
-                <p class="text-slate-600 leading-relaxed text-sm sm:text-lg mb-6">
-                    Bienvenido/a a la unidad didáctica modular. La función cuadrática es una herramienta poderosa que nos permite modelar fenómenos del mundo real: desde la trayectoria de un objeto hasta el cálculo de costos, ganancias y presupuestos de un emprendimiento.
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 border-t border-slate-100 pt-6">
-                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                        <div class="text-xs font-bold uppercase text-brand-700">Forma Standard</div>
-                        <div class="text-sm font-mono font-bold text-slate-800 mt-1 math-overflow">$$f(x) = ax^2 + bx + c$$</div>
-                    </div>
-                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                        <div class="text-xs font-bold uppercase text-emerald-600">Resolvente</div>
-                        <div class="text-sm font-bold text-slate-700 mt-1">Fórmula de Bhaskara</div>
-                    </div>
-                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                        <div class="text-xs font-bold uppercase text-amber-500">Gráfica</div>
-                        <div class="text-sm font-bold text-slate-700 mt-1">Parábola Simétrica</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="fundamentacion" class="space-y-6">
-            <div class="border-l-4 border-brand-700 pl-4">
-                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">1. Expresiones Algebraicas de la Función Cuadrática</h3>
-                <p class="text-slate-600 text-xs sm:text-sm">
-                    Una función cuadrática es una relación analítica donde la variable independiente \(x\) tiene grado máximo igual a 2. La misma función puede expresarse de tres maneras equivalentes.
+                <p class="text-xs text-slate-400 px-4">
+                    La Plata está sufriendo un ataque de fake news y desinformación. Demostrá tus habilidades en el <span class="text-cyan-300 font-semibold">Módulo 5</span> para salvar la red escolar.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded">Forma Standard</span>
-                            <span class="text-xl">📊</span>
-                        </div>
-                        <h4 class="text-base sm:text-lg font-bold text-slate-900 mb-2">Forma Polinómica</h4>
-                        <div class="bg-slate-100 p-3 rounded-lg text-center mb-4 math-overflow">
-                            <span class="font-mono text-brand-900 font-bold">\(f(x) = ax^2 + bx + c\)</span>
-                        </div>
-                        <p class="text-xs sm:text-sm text-slate-600 mb-4">
-                            Muestra explícitamente los tres coeficientes y la ordenada al origen en el punto \((0, c)\).
-                        </p>
-                    </div>
-                    <ul class="text-xs text-slate-500 space-y-1.5 border-t pt-3">
-                        <li>• <strong>a:</strong> Concavidad y curvatura.</li>
-                        <li>• <strong>b:</strong> Traslación del eje simétrico.</li>
-                        <li>• <strong>c:</strong> Corte exacto con el eje vertical \(y\).</li>
-                    </ul>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded">Forma Vértice</span>
-                            <span class="text-xl">🎯</span>
-                        </div>
-                        <h4 class="text-base sm:text-lg font-bold text-slate-900 mb-2">Forma Canónica</h4>
-                        <div class="bg-slate-100 p-3 rounded-lg text-center mb-4 math-overflow">
-                            <span class="font-mono text-emerald-900 font-bold">\(f(x) = a(x - x_v)^2 + y_v\)</span>
-                        </div>
-                        <p class="text-xs sm:text-sm text-slate-600 mb-4">
-                            Expresa directamente las coordenadas del punto extremo o <strong>vértice</strong> \(V = (x_v, y_v)\).
-                        </p>
-                    </div>
-                    <ul class="text-xs text-slate-500 space-y-1.5 border-t pt-3">
-                        <li>• Identifica valores máximos o mínimos.</li>
-                        <li>• Visualiza traslaciones en el plano.</li>
-                    </ul>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded">Forma Ceros</span>
-                            <span class="text-xl">🌱</span>
-                        </div>
-                        <h4 class="text-base sm:text-lg font-bold text-slate-900 mb-2">Forma Factorizada</h4>
-                        <div class="bg-slate-100 p-3 rounded-lg text-center mb-4 math-overflow">
-                            <span class="font-mono text-amber-900 font-bold">\(f(x) = a(x - x_1)(x - x_2)\)</span>
-                        </div>
-                        <p class="text-xs sm:text-sm text-slate-600 mb-4">
-                            Expresa la función utilizando sus raíces reales \(x_1\) y \(x_2\), los puntos donde cruza el eje horizontal.
-                        </p>
-                    </div>
-                    <ul class="text-xs text-slate-500 space-y-1.5 border-t pt-3">
-                        <li>• Requiere discriminante positivo o nulo (\(\Delta \ge 0\)).</li>
-                        <li>• Muestra los ceros de la función.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="anatomia" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-8 space-y-6">
-            <div class="border-l-4 border-emerald-600 pl-4">
-                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">2. Anatomía Geométrica de la Parábola y Fórmula Resolvente</h3>
-                <p class="text-slate-600 text-xs sm:text-sm">
-                    Para graficar y analizar una función cuadrática, calculamos sus 4 componentes clave:
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-                <div class="space-y-4">
-                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                        <div class="flex items-center space-x-3">
-                            <span class="w-7 h-7 rounded-full bg-brand-700 text-white flex items-center justify-center font-bold text-xs shrink-0">1</span>
-                            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Vértice \(V = (x_v, y_v)\) y Eje de Simetría</h4>
-                        </div>
-                        <p class="text-xs sm:text-sm text-slate-600 mt-2">
-                            Punto donde la curva alcanza su valor <strong>máximo</strong> (si \(a < 0\)) o <strong>mínimo</strong> (si \(a > 0\)).
-                        </p>
-                        <div class="mt-2 font-mono text-xs text-brand-800 bg-white p-2 rounded border border-slate-200 math-overflow">
-                            \(x_v = -\frac{b}{2a}\) &nbsp;&nbsp;|&nbsp;&nbsp; \(y_v = f(x_v)\)
-                        </div>
-                    </div>
-
-                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                        <div class="flex items-center space-x-3">
-                            <span class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0">2</span>
-                            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Ceros o Raíces (Fórmula de Bhaskara)</h4>
-                        </div>
-                        <p class="text-xs sm:text-sm text-slate-600 mt-2">
-                            Intersecciones con el eje horizontal (\(y = 0\)). Se obtienen mediante:
-                        </p>
-                        <div class="mt-2 font-mono text-xs text-emerald-800 bg-white p-2 rounded border border-slate-200 math-overflow">
-                            \(x_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}\)
-                        </div>
-                    </div>
-
-                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                        <div class="flex items-center space-x-3">
-                            <span class="w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xs shrink-0">3</span>
-                            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Discriminante \(\Delta = b^2 - 4ac\)</h4>
-                        </div>
-                        <div class="text-xs text-slate-600 mt-2 space-y-1">
-                            <p>• <strong>\(\Delta > 0\):</strong> 2 raíces reales distintas (corta al eje \(x\) en 2 puntos).</p>
-                            <p>• <strong>\(\Delta = 0\):</strong> 1 raíz real doble (el vértice toca el eje \(x\)).</p>
-                            <p>• <strong>\(\Delta < 0\):</strong> Sin raíces reales (no corta el eje \(x\)).</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 text-white p-5 sm:p-6 rounded-2xl shadow-lg flex flex-col justify-between">
-                    <div>
-                        <div class="text-amber-400 font-bold text-xs uppercase tracking-widest mb-2">Regla Pedagógica CENS</div>
-                        <h4 class="text-lg sm:text-xl font-bold mb-4">Efecto del signo del coeficiente "a"</h4>
-                        
-                        <div class="space-y-3 text-xs sm:text-sm">
-                            <div class="flex items-start space-x-3 bg-slate-800/90 p-3 rounded-lg border border-slate-700">
-                                <span class="text-2xl">😃</span>
-                                <div>
-                                    <strong class="text-emerald-400">Si \(a > 0\) (Positivo):</strong>
-                                    <p class="text-slate-300 text-xs mt-0.5">Ramas hacia arriba ("Convexidad"). Existe un Mínimo Absoluto en el Vértice.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start space-x-3 bg-slate-800/90 p-3 rounded-lg border border-slate-700">
-                                <span class="text-2xl">🙁</span>
-                                <div>
-                                    <strong class="text-rose-400">Si \(a < 0\) (Negativo):</strong>
-                                    <p class="text-slate-300 text-xs mt-0.5">Ramas hacia abajo ("Concavidad"). Existe un Máximo Absoluto en el Vértice.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400">
-                        💡 <strong>Ordenada al Origen:</strong> Se evalúa \(f(0) = c\), ubicándose en el par ordenado \((0, c)\).
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="laboratorio" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-8 space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4">
+            <form id="form-start" onsubmit="startGame(event)" class="glass-panel p-5 rounded-2xl space-y-4 shadow-xl">
                 <div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded">Herramienta Interactiva</span>
-                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">Laboratorio de la Parábola</h3>
-                    <p class="text-slate-600 text-xs sm:text-sm">Modifica los coeficientes para explorar en tiempo real cómo cambia la gráfica y sus valores analíticos en cualquier pantalla.</p>
+                    <label for="player-name" class="block text-xs font-bold text-slate-300 mb-1">
+                        <i class="fa-solid fa-id-card text-cyan-400 mr-1"></i> Tu Nombre o Sobrenombre:
+                    </label>
+                    <input type="text" id="player-name" required placeholder="Ej: Lucas_4to" maxlength="15" 
+                           class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400">
                 </div>
-                <div class="flex flex-wrap gap-1.5">
-                    <button onclick="loadPreset(1, -6, 5)" class="px-2.5 py-1.5 text-xs font-medium bg-slate-100 hover:bg-brand-100 hover:text-brand-800 rounded-lg transition-colors">Ej 1: \(x^2 - 6x + 5\)</button>
-                    <button onclick="loadPreset(-1, 2, 3)" class="px-2.5 py-1.5 text-xs font-medium bg-slate-100 hover:bg-brand-100 hover:text-brand-800 rounded-lg transition-colors">Ej 2: \(-x^2 + 2x + 3\)</button>
-                    <button onclick="loadPreset(-2, 12, -10)" class="px-2.5 py-1.5 text-xs font-medium bg-slate-100 hover:bg-brand-100 hover:text-brand-800 rounded-lg transition-colors">Ej 3: \(-2x^2 + 12x - 10\)</button>
+
+                <div>
+                    <label for="player-school" class="block text-xs font-bold text-slate-300 mb-1">
+                        <i class="fa-solid fa-school text-cyan-400 mr-1"></i> Tu Escuela / Curso:
+                    </label>
+                    <input type="text" id="player-school" required placeholder="Ej: ES N° 4 - 4to Año" maxlength="20" 
+                           class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400">
                 </div>
+
+                <div class="bg-cyan-950/40 border border-cyan-800/50 rounded-xl p-3 text-[11px] text-cyan-200/90 flex gap-2.5 items-start">
+                    <i class="fa-solid fa-circle-info text-cyan-400 text-sm mt-0.5"></i>
+                    <span>Completá el recorrido de 8 niveles en tu cel. Al finalizar podrás descargar tu diploma docente.</span>
+                </div>
+
+                <button type="submit" class="btn-touch w-full py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black rounded-xl text-sm uppercase tracking-wider shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2">
+                    <span>Iniciar Misión</span>
+                    <i class="fa-solid fa-play"></i>
+                </button>
+            </form>
+        </section>
+
+        <!-- PANTALLA 2: MAPA DE NIVELES -->
+        <section id="screen-map" class="hidden space-y-4 my-auto">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-200">Ruta del Ciberespacio</h3>
+                    <p class="text-[10px] text-slate-400">Superá las zonas de La Plata Digital</p>
+                </div>
+                <span class="text-xs bg-slate-800 text-cyan-400 px-2.5 py-1 rounded-full font-mono border border-slate-700" id="map-progress">0/8</span>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                <div class="lg:col-span-5 space-y-5 bg-slate-50 p-4 sm:p-6 rounded-xl border border-slate-200">
-                    <div>
-                        <div class="flex justify-between items-center mb-1">
-                            <label for="coefA" class="font-bold text-slate-800 text-xs sm:text-sm">Coeficiente cuadrático (a):</label>
-                            <span id="valA" class="font-mono font-bold text-brand-700 bg-white px-2 py-0.5 rounded border border-slate-200 text-xs sm:text-sm">1</span>
-                        </div>
-                        <input type="range" id="coefA" min="-5" max="5" step="0.5" value="1" oninput="updateCalculations()" class="w-full accent-brand-700 cursor-pointer h-2 bg-slate-200 rounded-lg">
-                    </div>
+            <!-- Nodos del Mapa -->
+            <div class="space-y-2.5 py-2 custom-scroll max-h-[380px] overflow-y-auto pr-1" id="nodes-container">
+                <!-- Se genera dinámicamente con JS -->
+            </div>
 
-                    <div>
-                        <div class="flex justify-between items-center mb-1">
-                            <label for="coefB" class="font-bold text-slate-800 text-xs sm:text-sm">Coeficiente lineal (b):</label>
-                            <span id="valB" class="font-mono font-bold text-brand-700 bg-white px-2 py-0.5 rounded border border-slate-200 text-xs sm:text-sm">-6</span>
-                        </div>
-                        <input type="range" id="coefB" min="-12" max="12" step="1" value="-6" oninput="updateCalculations()" class="w-full accent-brand-700 cursor-pointer h-2 bg-slate-200 rounded-lg">
-                    </div>
+            <button onclick="continueToLevel()" id="btn-start-level" class="btn-touch w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-bolt"></i>
+                <span id="btn-start-level-text">Entrar al Nivel 1</span>
+            </button>
+        </section>
 
-                    <div>
-                        <div class="flex justify-between items-center mb-1">
-                            <label for="coefC" class="font-bold text-slate-800 text-xs sm:text-sm">Término independiente (c):</label>
-                            <span id="valC" class="font-mono font-bold text-brand-700 bg-white px-2 py-0.5 rounded border border-slate-200 text-xs sm:text-sm">5</span>
-                        </div>
-                        <input type="range" id="coefC" min="-12" max="12" step="1" value="5" oninput="updateCalculations()" class="w-full accent-brand-700 cursor-pointer h-2 bg-slate-200 rounded-lg">
-                    </div>
+        <!-- PANTALLA 3: JUEGO / DESAFÍO EN CURSO -->
+        <section id="screen-game" class="hidden space-y-4 my-auto">
+            <!-- Header Nivel -->
+            <div class="flex justify-between items-center bg-slate-950/60 p-2.5 rounded-xl border border-slate-800 text-xs">
+                <span class="font-bold text-cyan-400" id="game-level-title">Nivel 1</span>
+                <span class="bg-slate-800 text-slate-300 text-[10px] px-2 py-0.5 rounded" id="game-level-tag">Conceptos</span>
+            </div>
 
-                    <div class="bg-white p-3.5 rounded-lg border border-slate-200 space-y-2 text-xs">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 text-xs uppercase tracking-wider">Resultados Analíticos:</h4>
-                        <div class="flex justify-between items-center"><span class="text-slate-500">Ecuación:</span> <span id="resEcuacion" class="font-mono font-bold text-slate-800">f(x) = x² - 6x + 5</span></div>
-                        <div class="flex justify-between items-center"><span class="text-slate-500">Vértice V(xv, yv):</span> <span id="resVertice" class="font-mono font-bold text-brand-700">(3.00, -4.00)</span></div>
-                        <div class="flex justify-between items-center"><span class="text-slate-500">Discriminante (Δ):</span> <span id="resDelta" class="font-mono font-bold text-slate-800">16.00</span></div>
-                        <div class="flex justify-between items-center"><span class="text-slate-500">Raíces x₁, x₂:</span> <span id="resRaices" class="font-mono font-bold text-emerald-600">x₁ = 1.00, x₂ = 5.00</span></div>
-                        <div class="flex justify-between items-center"><span class="text-slate-500">Ordenada (0, c):</span> <span id="resOrdenada" class="font-mono font-bold text-slate-800">(0, 5)</span></div>
-                        <div class="flex justify-between items-center"><span class="text-slate-500">Extremo:</span> <span id="resExtremo" class="font-mono font-bold text-amber-600">Mínimo Absoluto</span></div>
-                    </div>
+            <!-- Escenario / Narrativa -->
+            <div class="glass-panel p-4 rounded-2xl border-l-4 border-l-cyan-500 space-y-2 shadow-lg">
+                <div class="flex items-center gap-2 text-cyan-300 font-bold text-xs">
+                    <i class="fa-solid fa-terminal" id="scenario-icon"></i>
+                    <span id="scenario-badge">DESAFÍO TÁCTICO</span>
                 </div>
+                <p class="text-xs md:text-sm text-slate-200 leading-relaxed font-medium" id="scenario-text">
+                    Cargando misión...
+                </p>
+            </div>
 
-                <div class="lg:col-span-7 w-full flex flex-col justify-center items-center">
-                    <div class="chart-container bg-slate-50/50 p-2 rounded-xl border border-slate-100">
-                        <canvas id="parabolaChart"></canvas>
-                    </div>
-                    <p class="text-center text-xs text-slate-400 mt-2">💡 Desplaza los controles deslizantes arriba para ajustar el gráfico interactivo.</p>
-                </div>
+            <!-- Opciones / Botones de Respuesta -->
+            <div class="space-y-2.5" id="options-container">
+                <!-- Se insertan botones de respuesta mediante JS -->
+            </div>
+
+            <!-- Pista Comprable -->
+            <div class="flex justify-between items-center pt-1">
+                <button onclick="buyHint()" id="btn-hint" class="btn-touch text-xs text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-amber-500/20">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>Pista (-20 pts)</span>
+                </button>
+                <span class="text-[10px] text-slate-500" id="hint-text"></span>
             </div>
         </section>
 
-        <section id="practica" class="space-y-6">
-            <div class="border-l-4 border-amber-500 pl-4">
-                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">3. Guía Práctica de Ejercitación</h3>
-                <p class="text-slate-600 text-xs sm:text-sm">Resuelve las siguientes actividades secuenciales antes de consultar las soluciones analíticas.</p>
+        <!-- MODAL DE FEEDBACK (CORRECTO / INCORRECTO) -->
+        <div id="modal-feedback" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="glass-panel w-full max-w-sm rounded-2xl p-5 space-y-4 text-center border shadow-2xl" id="modal-content">
+                <div class="w-14 h-14 rounded-full mx-auto flex items-center justify-center text-2xl shadow-inner" id="modal-icon-bg">
+                    <i id="modal-icon" class="fa-solid"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-black" id="modal-title">¡Resultado!</h3>
+                    <p class="text-xs text-slate-300 mt-2 leading-relaxed" id="modal-desc"></p>
+                </div>
+                <button onclick="closeModal()" class="btn-touch w-full py-2.5 font-bold rounded-xl text-xs uppercase tracking-wider text-slate-950 shadow" id="modal-btn">
+                    Continuar
+                </button>
             </div>
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded">Actividad 1</span>
-                        <span class="text-xs text-slate-400">Reconocimiento</span>
-                    </div>
-                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">Identificación de Coeficientes y Concavidad</h4>
-                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        Indica los valores de \(a\), \(b\) y \(c\), la concavidad (hacia arriba/abajo) y la ordenada al origen:
-                    </p>
-                    <div class="bg-slate-50 p-3 rounded-lg text-xs font-mono space-y-2 math-overflow">
-                        <p>1.1) \(f(x) = x^2 - 6x + 5\)</p>
-                        <p>1.2) \(g(x) = -2x^2 + 8x\)</p>
-                        <p>1.3) \(h(x) = -x^2 + 4\)</p>
-                    </div>
+        <!-- PANTALLA 4: GAME OVER -->
+        <section id="screen-gameover" class="hidden space-y-5 my-auto text-center">
+            <div class="w-16 h-16 bg-rose-500/20 border border-rose-500/40 text-rose-400 rounded-full flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-bug"></i>
+            </div>
+            <div class="space-y-1">
+                <h2 class="text-xl font-black text-rose-400">Sistema Infectado</h2>
+                <p class="text-xs text-slate-400 px-4">
+                    Te quedaste sin conexiones (vidas). Las fake news se apoderaron del servidor.
+                </p>
+            </div>
+            <div class="glass-panel p-4 rounded-xl space-y-2 text-xs">
+                <div class="flex justify-between border-b border-slate-800 pb-1">
+                    <span class="text-slate-400">Puntaje logrado:</span>
+                    <span class="font-mono font-bold text-amber-300" id="go-score">0</span>
                 </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded">Actividad 2</span>
-                        <span class="text-xs text-slate-400">Cálculo Analítico</span>
-                    </div>
-                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">Cálculo de Raíces y Puntos Notables</h4>
-                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        Para la función cuadrática \(f(x) = x^2 - 6x + 5\):
-                    </p>
-                    <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-600 space-y-1">
-                        <li>Aplica Bhaskara para hallar las raíces \(x_1\) y \(x_2\).</li>
-                        <li>Determina las coordenadas del vértice \(V = (x_v, y_v)\).</li>
-                        <li>Escribe la ecuación del eje de simetría.</li>
-                    </ol>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded">Actividad 3</span>
-                        <span class="text-xs text-slate-400">Análisis Completo</span>
-                    </div>
-                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">Estudio Funcional Integral</h4>
-                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        Dada la función \(j(x) = -x^2 + 2x + 3\):
-                    </p>
-                    <ul class="list-disc list-inside text-xs sm:text-sm text-slate-600 space-y-1">
-                        <li>Obtén concavidad, ordenada, raíces y vértice.</li>
-                        <li>Realiza el estudio analítico: Dominio, Imagen, Intervalos de Crecimiento (\(I^\uparrow\)) y Decrecimiento (\(I^\downarrow\)), Positividad (\(C^+\)) y Negatividad (\(C^-\)).</li>
-                    </ul>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">Actividad 4</span>
-                        <span class="text-xs text-slate-400">Contexto Real CENS</span>
-                    </div>
-                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">Modelización Económica: Taller Productivo</h4>
-                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        Un emprendimiento del CENS analiza su ganancia mensual \(G(x)\) en miles de pesos en función de las unidades \(x\) (en cientos) producidas:
-                    </p>
-                    <div class="bg-slate-50 p-2 rounded text-center math-overflow font-mono text-xs sm:text-sm font-bold text-slate-800">
-                        \(G(x) = -2x^2 + 12x - 10\)
-                    </div>
-                    <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-600 space-y-1">
-                        <li>¿Cuántas unidades generan la ganancia máxima y cuál es su monto?</li>
-                        <li>¿En qué rango de producción hay ganancias reales (\(G(x) > 0\))?</li>
-                        <li>¿Qué ocurre si la producción es nula (\(x = 0\))?</li>
-                    </ol>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Nivel alcanzado:</span>
+                    <span class="font-mono font-bold text-cyan-300" id="go-level">1</span>
                 </div>
             </div>
+            <button onclick="resetGame()" class="btn-touch w-full py-3 bg-cyan-500 text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20">
+                <i class="fa-solid fa-rotate-right mr-1"></i> Reintentar Misión
+            </button>
         </section>
 
-        <section id="resolucionario" class="bg-slate-900 text-white rounded-2xl shadow-xl p-5 sm:p-8 space-y-6">
-            <div class="border-l-4 border-emerald-400 pl-4">
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Paso a Paso</span>
-                <h3 class="text-xl sm:text-2xl font-bold">4. Resolucionario Analítico y Respuestas</h3>
-                <p class="text-slate-400 text-xs sm:text-sm">Verifica tus procedimientos analíticos con las respuestas guiadas desarrolladas por la cátedra.</p>
+        <!-- PANTALLA 5: VICTORIA / CERTIFICADO -->
+        <section id="screen-victory" class="hidden space-y-4 my-auto">
+            <div class="text-center space-y-1">
+                <div class="inline-block p-2 bg-amber-500/20 border border-amber-500/40 text-amber-300 rounded-full mb-1">
+                    <i class="fa-solid fa-trophy text-2xl animate-bounce-short"></i>
+                </div>
+                <h2 class="text-xl font-black text-amber-300">¡Misión Cumplida!</h2>
+                <p class="text-[11px] text-slate-300">
+                    Has limpiado la red de La Plata y demostrado tu alfabetización digital.
+                </p>
             </div>
 
-            <div class="space-y-4">
-                <details class="group bg-slate-800/60 rounded-xl border border-slate-700 transition-all">
-                    <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm">
-                        <span>Solución Actividad 1: Coeficientes y Orientación</span>
-                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-white group-open:rotate-180 transition-transform">▼</span>
-                    </summary>
-                    <div class="p-4 border-t border-slate-700 text-xs text-slate-300 space-y-3 font-sans">
-                        <div>
-                            <strong class="text-white">1.1) \(f(x) = x^2 - 6x + 5\):</strong>
-                            <p>• Coeficientes: \(a = 1\), \(b = -6\), \(c = 5\).</p>
-                            <p>• Concavidad: Hacia arriba (\(a = 1 > 0\)).</p>
-                            <p>• Ordenada al origen: \((0, 5)\).</p>
-                        </div>
-                        <div>
-                            <strong class="text-white">1.2) \(g(x) = -2x^2 + 8x\):</strong>
-                            <p>• Coeficientes: \(a = -2\), \(b = 8\), \(c = 0\).</p>
-                            <p>• Concavidad: Hacia abajo (\(a = -2 < 0\)).</p>
-                            <p>• Ordenada al origen: \((0, 0)\).</p>
-                        </div>
-                        <div>
-                            <strong class="text-white">1.3) \(h(x) = -x^2 + 4\):</strong>
-                            <p>• Coeficientes: \(a = -1\), \(b = 0\), \(c = 4\).</p>
-                            <p>• Concavidad: Hacia abajo (\(a = -1 < 0\)).</p>
-                            <p>• Ordenada al origen: \((0, 4)\).</p>
-                        </div>
+            <!-- CERTIFICADO DIGITAL VISUAL -->
+            <div id="certificate-card" class="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-amber-400/60 rounded-2xl p-4 shadow-2xl relative overflow-hidden space-y-3">
+                <div class="absolute -right-6 -bottom-6 text-amber-500/5 text-8xl pointer-events-none">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+
+                <div class="flex justify-between items-center border-b border-amber-500/30 pb-2">
+                    <span class="text-[10px] font-bold text-amber-400 uppercase tracking-widest">DGCyE - NTICx ES.4</span>
+                    <span class="text-[9px] bg-amber-400/10 text-amber-300 px-2 py-0.5 rounded border border-amber-400/30 font-mono">CERTIFICADO DIGITAL</span>
+                </div>
+
+                <div class="text-center space-y-1">
+                    <p class="text-[10px] text-slate-400 uppercase">Se otorga el presente reconocimiento a:</p>
+                    <h3 class="text-base font-black text-cyan-300 underline decoration-cyan-500/50" id="cert-name">Nombre Estudiante</h3>
+                    <p class="text-[10px] text-slate-300" id="cert-school">Escuela Secundaria</p>
+                </div>
+
+                <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-[11px] space-y-1">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Rango Digital:</span>
+                        <span class="font-bold text-emerald-400" id="cert-rank">Ciber-Especialista NTICx</span>
                     </div>
-                </details>
-
-                <details class="group bg-slate-800/60 rounded-xl border border-slate-700 transition-all">
-                    <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm">
-                        <span>Solución Actividad 2: Raíces por Bhaskara y Vértice</span>
-                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-white group-open:rotate-180 transition-transform">▼</span>
-                    </summary>
-                    <div class="p-4 border-t border-slate-700 text-xs text-slate-300 space-y-3">
-                        <p><strong class="text-white">1) Bhaskara en \(f(x) = x^2 - 6x + 5\):</strong></p>
-                        <div class="font-mono bg-slate-900 p-3 rounded text-amber-300 math-overflow">
-                            x = [ -(-6) ± √((-6)² - 4·1·5) ] / (2·1)<br>
-                            x = [ 6 ± √(36 - 20) ] / 2 = [ 6 ± 4 ] / 2<br>
-                            x₁ = 5 &nbsp;&nbsp;|&nbsp;&nbsp; x₂ = 1
-                        </div>
-                        <p>Las raíces son los puntos \((1, 0)\) y \((5, 0)\).</p>
-
-                        <p><strong class="text-white">2) Vértice \(V = (x_v, y_v)\):</strong></p>
-                        <p>• \(x_v = -(-6) / (2·1) = 3\)</p>
-                        <p>• \(y_v = f(3) = (3)² - 6(3) + 5 = -4\)</p>
-                        <p>Vértice: <strong>\(V = (3, -4)\)</strong>. Eje de simetría: **\(x = 3\)**.</p>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Puntaje Final:</span>
+                        <span class="font-bold font-mono text-amber-300" id="cert-score">0 pts</span>
                     </div>
-                </details>
-
-                <details class="group bg-slate-800/60 rounded-xl border border-slate-700 transition-all">
-                    <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm">
-                        <span>Solución Actividad 3: Análisis Funcional Completo de j(x) = -x² + 2x + 3</span>
-                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-white group-open:rotate-180 transition-transform">▼</span>
-                    </summary>
-                    <div class="p-4 border-t border-slate-700 text-xs text-slate-300 space-y-3">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <h5 class="font-bold text-white mb-2">Cálculos Notables:</h5>
-                                <p>• \(a = -1, b = 2, c = 3\)</p>
-                                <p>• Concavidad: Hacia abajo (\(a < 0\)).</p>
-                                <p>• Ordenada: \((0, 3)\)</p>
-                                <p>• Vértice: \(V = (1, 4)\)</p>
-                                <p>• Raíces: \(x_1 = -1\), \(x_2 = 3\)</p>
-                            </div>
-                            <div class="bg-slate-900 p-3 rounded font-mono text-emerald-300 space-y-1 math-overflow">
-                                <h5 class="font-bold text-white mb-1 font-sans">Estudio Analítico:</h5>
-                                <p>• Dom(j) = ℝ (Todos los reales)</p>
-                                <p>• Img(j) = (-∞, 4]</p>
-                                <p>• Crecimiento: I↑ = (-∞, 1)</p>
-                                <p>• Decrecimiento: I↓ = (1, +∞)</p>
-                                <p>• Positividad: C⁺ = (-1, 3)</p>
-                                <p>• Negatividad: C⁻ = (-∞, -1) ∪ (3, +∞)</p>
-                            </div>
-                        </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Fecha de Validación:</span>
+                        <span class="font-mono text-slate-300" id="cert-date">--/--/----</span>
                     </div>
-                </details>
+                </div>
 
-                <details class="group bg-slate-800/60 rounded-xl border border-slate-700 transition-all">
-                    <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm">
-                        <span>Solución Actividad 4: Modelo Económico del Taller CENS</span>
-                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-white group-open:rotate-180 transition-transform">▼</span>
-                    </summary>
-                    <div class="p-4 border-t border-slate-700 text-xs text-slate-300 space-y-3">
-                        <p><strong class="text-white">1) Producción Óptima y Ganancia Máxima:</strong></p>
-                        <p>Como \(a = -2 < 0\), la ganancia máxima está en el vértice:</p>
-                        <div class="font-mono bg-slate-900 p-2 rounded text-amber-300 math-overflow">
-                            x_v = -12 / (2·(-2)) = 3 (300 artículos)<br>
-                            y_v = G(3) = -2(3)² + 12(3) - 10 = 8 ($8.000)
-                        </div>
-                        <p><strong>Respuesta:</strong> Fabricar <strong>300 artículos</strong> para una ganancia máxima de <strong>$8.000</strong>.</p>
+                <p class="text-[9px] text-center text-slate-500 italic">
+                    "Aprobó el Módulo 5: Alfabetización en Medios Digitales de Comunicación y Colaboración."
+                </p>
+            </div>
 
-                        <p><strong class="text-white">2) Intervalo de Ganancias Positivas (G(x) > 0):</strong></p>
-                        <p>Raíces de \(-2x^2 + 12x - 10 = 0\): \(x_1 = 1\) (100 u.) y \(x_2 = 5\) (500 u.).</p>
-                        <p><strong>Respuesta:</strong> Se producen ganancias al fabricar entre <strong>100 y 500 unidades</strong>.</p>
-
-                        <p><strong class="text-white">3) Parada de Producción (x = 0):</strong></p>
-                        <p>\(G(0) = -10\). Se genera una <strong>pérdida de $10.000</strong> por costos fijos.</p>
-                    </div>
-                </details>
+            <!-- Botones de Acción -->
+            <div class="space-y-2">
+                <button onclick="shareResult()" class="btn-touch w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-share-nodes"></i>
+                    <span>Compartir con el Profe / Grupo</span>
+                </button>
+                
+                <button onclick="resetGame()" class="btn-touch w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Jugar de nuevo</span>
+                </button>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 py-6 text-center text-xs">
-        <div class="max-w-7xl mx-auto px-4">
-            <p>Guía Didáctica de Matemática CENS 3° Año - Adaptada para Educación Secundaria de Jóvenes y Adultos.</p>
-            <p class="mt-1 text-slate-500">Renderizado adaptable en tiempo real compatible con dispositivos móviles.</p>
-        </div>
+    <!-- FOOTER SIMPLE -->
+    <footer class="w-full bg-slate-950 border-t border-slate-900 py-2.5 text-center text-[10px] text-slate-600">
+        NTICx Secundaria ES.4 • La Plata • Aprendizaje con Smartphones
     </footer>
 
+    <!-- LÓGICA DEL JUEGO (VANILLA JAVASCRIPT) -->
     <script>
-        let myChart = null;
+        // ESTADO DEL JUEGO
+        let player = {
+            name: '',
+            school: '',
+            score: 0,
+            lives: 3,
+            currentLevel: 0,
+            unlockedLevel: 0
+        };
 
-        function wrapLabel(str) {
-            if (typeof str !== 'string') return str;
-            if (str.length <= 16) return str;
-            const words = str.split(' ');
-            const lines = [];
-            let currentLine = '';
-            words.forEach(word => {
-                if ((currentLine + ' ' + word).trim().length > 16) {
-                    if (currentLine) lines.push(currentLine.trim());
-                    currentLine = word;
-                } else {
-                    currentLine += (currentLine ? ' ' : '') + word;
-                }
+        // BASE DE DATOS DE NIVELES / DESAFÍOS (MÓDULO 5 NTICx)
+        const levelsData = [
+            {
+                id: 1,
+                title: "Eje 1: El Virus del Mensaje",
+                tag: "Prosumidor & Comunicación",
+                icon: "fa-satellite-dish",
+                location: "Plaza Moreno Wi-Fi",
+                scenario: "Un alumno sube un video a TikTok editando una noticia local y sus compañeros comentan y comparten en segundos. ¿Qué rol está ejerciendo este estudiante en la comunicación digital?",
+                options: [
+                    { text: "Receptor Pasivo tradicional de Mass Media.", correct: false, reason: "Los receptores pasivos solo leen o ven tele sin interactuar ni crear nada." },
+                    { text: "Prosumidor (Produce y Consume contenidos).", correct: true, reason: "¡Correcto! Es Prosumidor porque no solo consume información, también la crea y distribuye." },
+                    { text: "Técnico en mantenimiento de redes telemáticas.", correct: false, reason: "Su rol es comunicacional y creativo, no de reparación técnica." },
+                    { text: "Editor exclusivo de periódicos en papel.", correct: false, reason: "Está operando en redes digitales con interacción en tiempo real." }
+                ],
+                hint: "Pensá en la palabra compuesta por 'Productor' y 'Consumidor'."
+            },
+            {
+                id: 2,
+                title: "Eje 2: La Red Invisible",
+                tag: "Ubicuidad & Tercer Entorno",
+                icon: "fa-network-wired",
+                location: "Paseo del Bosque",
+                scenario: "Estás esperando el micro en La Plata y entrás al campus virtual de la escuela desde tu celular para responder un foro. ¿Qué concepto acuñado por Javier Echeverría explica este espacio telemático interconectado?",
+                options: [
+                    { text: "Entorno Natural (E1)", correct: false, reason: "El E1 se refiere a la naturaleza, nuestro cuerpo y el hogar primario." },
+                    { text: "Entorno Urbano (E2)", correct: false, reason: "El E2 es la ciudad física: las calles, los edificios y el transporte." },
+                    { text: "Tercer Entorno (E3)", correct: true, reason: "¡Excelente! El E3 es el espacio virtual, telemático y en red accesible con dispositivos." },
+                    { text: "Primer Entorno Agrario", correct: false, reason: "Corresponde al E1 ligado a la tierra y la vida natural." }
+                ],
+                hint: "Echeverría habla de tres entornos: Natural (E1), Urbano (E2) y Virtual (E3)."
+            },
+            {
+                id: 3,
+                title: "Eje 3: El Cazador de Clickbait",
+                tag: "Deconstrucción Mediática",
+                icon: "fa-newspaper",
+                location: "Diagonal 80 - Diario Digital",
+                scenario: "En un portal local ves este titular: '¡URGENTE! ¡Suspenso total en La Plata por lo que pasará mañana en las escuelas! (Hacé clic aquí)'. ¿Qué técnica mediática se está utilizando?",
+                options: [
+                    { text: "Periodismo investigativo de alta fidelidad.", correct: false, reason: "Falta información verídica y busca desesperadamente el clic." },
+                    { text: "Clickbait (Ciberanzuelo para ganar visitas).", correct: true, reason: "¡Exacto! Usa el sensacionalismo y el misterio para forzar el clic sin informar con rigor." },
+                    { text: "Comunicación asincrónica estructurada.", correct: false, reason: "La asincronía es una propiedad temporal de la comunicación, no una trampa de titular." },
+                    { text: "Verificación cruzada de fuentes gubernamentales.", correct: false, reason: "No cita fuentes reales ni oficiales." }
+                ],
+                hint: "La palabra traducida al español significa 'anzuelo de clics'."
+            },
+            {
+                id: 4,
+                title: "Eje 4: Escritura en Equipo",
+                tag: "Herramientas Colaborativas",
+                icon: "fa-pen-to-square",
+                location: "Biblioteca Central",
+                scenario: "Para la materia de Historia, el profe pide que todo el curso redacte un único resumen donde cada uno pueda agregar párrafos y corregir lo de otros al mismo tiempo. ¿Qué herramienta es ideal?",
+                options: [
+                    { text: "Una Wiki o Documento Colaborativo en la nube.", correct: true, reason: "¡Bien pensado! Las wikis y documentos compartidos permiten la edición colectiva y transparente." },
+                    { text: "Enviar correos individuales en PDF.", correct: false, reason: "El mail individual no genera un texto integrado en conjunto de forma ágil." },
+                    { text: "Un programa de transmisión por videollamada.", correct: false, reason: "Sirve para hablar sincrónicamente pero no para redactar un texto compartido." },
+                    { text: "Una llamada telefónica tradicional.", correct: false, reason: "Es una vía oral sin registro escrito editable." }
+                ],
+                hint: "Wikipedia es el ejemplo más famoso de este tipo de plataforma."
+            },
+            {
+                id: 5,
+                title: "Eje 5: La Bitácora del Alumno",
+                tag: "Ecosistema Blog",
+                icon: "fa-blog",
+                location: "Campus Virtual ES.4",
+                scenario: "Un estudiante crea un sitio web propio donde guarda sus trabajos prácticos de todo el año, añade reflexiones sobre lo aprendido y recibe comentarios del profe. ¿Cómo se denomina esta herramienta?",
+                options: [
+                    { text: "Fotolog antiguo.", correct: false, reason: "El fotolog se basaba casi exclusivamente en subir fotos personales." },
+                    { text: "Blogofolio o Portafolio Digital.", correct: true, reason: "¡Correcto! El blogofolio combina la bitácora (blog) con el portafolio de evidencias de aprendizaje." },
+                    { text: "Servidor de mundos virtuales.", correct: false, reason: "Un mundo virtual es un entorno 3D simulado, no un portafolio de tareas." },
+                    { text: "Red social horizontal de empleo.", correct: false, reason: "Eso describiría a redes profesionales como LinkedIn." }
+                ],
+                hint: "Es la unión de la palabra 'Blog' y 'Portafolio'."
+            },
+            {
+                id: 6,
+                title: "Eje 6: La Hora de Conectarse",
+                tag: "Sincrónico vs Asincrónico",
+                icon: "fa-clock",
+                location: "Estación de Trenes",
+                scenario: "El profesor publica una consigna en el foro de Google Classroom un lunes y los alumnos responden a lo largo de la semana según sus tiempos y disponibilidad de datos. ¿Qué tipo de comunicación es?",
+                options: [
+                    { text: "Comunicación Sincrónica en vivo.", correct: false, reason: "La comunicación sincrónica requiere coincidir exactamente en el mismo instante de tiempo." },
+                    { text: "Comunicación Asincrónica.", correct: true, reason: "¡Muy bien! Es asincrónica porque la emisión y la recepción ocurren en momentos diferidos." },
+                    { text: "Mundo virtual inmersivo 3D.", correct: false, reason: "No requiere avatares ni entornos tridimensionales." },
+                    { text: "Mass Media unidireccional.", correct: false, reason: "En el foro hay interacción activa entre docentes y estudiantes." }
+                ],
+                hint: "Recordá: 'A-' significa sin o fuera de (sin coincidencia de tiempo simultáneo)."
+            },
+            {
+                id: 7,
+                title: "Eje 7: La Búsqueda Orientada",
+                tag: "Estrategias de Indagación",
+                icon: "fa-compass",
+                location: "Laboratorio Móvil",
+                scenario: "Para evitar que los alumnos se pierdan buscando en Google cualquier sitio falso, la docente arma una guía con una introducción, una tarea específica, pasos detallados y links preevaluados. ¿Qué estrategia es?",
+                options: [
+                    { text: "WebQuest.", correct: true, reason: "¡Excelente! La WebQuest es una investigación guiada que orienta el uso de la web con links seguros." },
+                    { text: "Ataque de denegación de servicio.", correct: false, reason: "Eso es un ciberataque técnico, no una estrategia pedagógica." },
+                    { text: "Streaming masivo e informal.", correct: false, reason: "Es la emisión de video en directo, no una guía de investigación." },
+                    { text: "Spam educativo.", correct: false, reason: "El spam es correo o mensaje no deseado en masa." }
+                ],
+                hint: "Significa 'Búsqueda en la Web'."
+            },
+            {
+                id: 8,
+                title: "Eje 8: Desafío de Fuentes",
+                tag: "Fact-Checking Final",
+                icon: "fa-shield-cat",
+                location: "Servidor Central La Plata",
+                scenario: "Llega un mensaje al grupo de WhatsApp del curso diciendo que 'se regalan laptops en la plaza'. Para verificar si es verdad antes de compartir, ¿cuál es el primer paso recomendado?",
+                options: [
+                    { text: "Reenviarlo a todos los contactos por las dudas.", correct: false, reason: "Reenviar sin verificar ayuda a propagar posibles estafas o fake news." },
+                    { text: "Comprobar si hay un sitio oficial (.gob.ar / .edu.ar) o firma responsable que avale la noticia.", correct: true, reason: "¡Brillante! Siempre hay que buscar la fuente oficial, el autor y verificar el dominio web antes de creer." },
+                    { text: "Creerlo de inmediato porque tiene emoticones llamativos.", correct: false, reason: "Los emoticones llamativos son anzuelos comunes del phishing y ciberestafas." },
+                    { text: "Borrar WhatsApp del teléfono.", correct: false, reason: "Es una medida extrema que no resuelve la verificación crítica de la información." }
+                ],
+                hint: "Buscá la opción que involucra verificar el dominio web y el respaldo de organismos oficiales."
+            }
+        ];
+
+        // INICIALIZACIÓN
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cargar datos previos si existen en localStorage
+            const savedPlayer = localStorage.getItem('nticx_player');
+            if (savedPlayer) {
+                try {
+                    const parsed = JSON.parse(savedPlayer);
+                    document.getElementById('player-name').value = parsed.name || '';
+                    document.getElementById('player-school').value = parsed.school || '';
+                } catch(e){}
+            }
+        });
+
+        // INICIAR JUEGO (DESDE FORMULARIO)
+        function startGame(e) {
+            e.preventDefault();
+            player.name = document.getElementById('player-name').value.trim();
+            player.school = document.getElementById('player-school').value.trim();
+            player.score = 0;
+            player.lives = 3;
+            player.currentLevel = 0;
+            player.unlockedLevel = 0;
+
+            // Guardar datos básicos
+            localStorage.setItem('nticx_player', JSON.stringify({ name: player.name, school: player.school }));
+
+            // Actualizar HUD
+            updateHUD();
+
+            // Cambiar a pantalla de mapa
+            switchScreen('screen-map');
+            renderMap();
+        }
+
+        // CAMBIAR PANTALLAS
+        function switchScreen(screenId) {
+            const screens = ['screen-welcome', 'screen-map', 'screen-game', 'screen-gameover', 'screen-victory'];
+            screens.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.add('hidden');
             });
-            if (currentLine) lines.push(currentLine.trim());
-            return lines;
+            const target = document.getElementById(screenId);
+            if(target) target.classList.remove('hidden');
         }
 
-        function loadPreset(a, b, c) {
-            document.getElementById('coefA').value = a;
-            document.getElementById('coefB').value = b;
-            document.getElementById('coefC').value = c;
-            updateCalculations();
+        // ACTUALIZAR HUD SUPERIOR
+        function updateHUD() {
+            document.getElementById('hud-name').textContent = player.name || 'Estudiante';
+            document.getElementById('hud-score').textContent = player.score;
+            document.getElementById('hud-lives').textContent = player.lives;
+
+            // Cambiar rango según puntaje
+            let rank = "Novato Digital";
+            if (player.score >= 100) rank = "Explorador Web";
+            if (player.score >= 250) rank = "Fact-Checker";
+            if (player.score >= 400) rank = "Ciber-Especialista";
+            document.getElementById('hud-rank').textContent = rank;
         }
 
-        function updateCalculations() {
-            let a = parseFloat(document.getElementById('coefA').value);
-            if (a === 0) {
-                a = 0.1;
-                document.getElementById('coefA').value = 0.1;
-            }
-            const b = parseFloat(document.getElementById('coefB').value);
-            const c = parseFloat(document.getElementById('coefC').value);
+        // RENDERIZAR MAPA DE NIVELES
+        function renderMap() {
+            const container = document.getElementById('nodes-container');
+            container.innerHTML = '';
 
-            document.getElementById('valA').innerText = a;
-            document.getElementById('valB').innerText = b;
-            document.getElementById('valC').innerText = c;
+            document.getElementById('map-progress').textContent = `${player.unlockedLevel}/8`;
 
-            const xv = -b / (2 * a);
-            const yv = a * xv * xv + b * xv + c;
-            const delta = b * b - 4 * a * c;
+            levelsData.forEach((lvl, index) => {
+                const isUnlocked = index <= player.unlockedLevel;
+                const isCompleted = index < player.unlockedLevel;
+                const isCurrent = index === player.currentLevel;
 
-            let eqText = `f(x) = ${a === 1 ? '' : a === -1 ? '-' : a}x²`;
-            if (b !== 0) eqText += ` ${b > 0 ? '+ ' + (b === 1 ? '' : b) : '- ' + Math.abs(b)}x`;
-            if (c !== 0) eqText += ` ${c > 0 ? '+ ' + c : '- ' + Math.abs(c)}`;
-            document.getElementById('resEcuacion').innerText = eqText;
+                const node = document.createElement('div');
+                node.className = `p-3 rounded-xl border flex items-center justify-between transition-all ${
+                    isCurrent ? 'bg-cyan-950/80 border-cyan-400/80 shadow-md shadow-cyan-500/10' :
+                    isCompleted ? 'bg-slate-900/90 border-emerald-500/50 text-slate-300' :
+                    isUnlocked ? 'bg-slate-900/60 border-slate-700 text-slate-200' :
+                    'bg-slate-950/40 border-slate-900 opacity-50 text-slate-600'
+                }`;
 
-            document.getElementById('resVertice').innerText = `(${xv.toFixed(2)}, ${yv.toFixed(2)})`;
-            document.getElementById('resDelta').innerText = delta.toFixed(2);
-            document.getElementById('resOrdenada').innerText = `(0, ${c})`;
+                node.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg ${
+                            isCompleted ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' :
+                            isUnlocked ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40' :
+                            'bg-slate-800 text-slate-600'
+                        } flex items-center justify-center text-sm font-black">
+                            <i class="fa-solid ${lvl.icon}"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold ${isCurrent ? 'text-cyan-300' : 'text-slate-200'}">${lvl.title}</h4>
+                            <span class="text-[10px] text-slate-400 block"><i class="fa-solid fa-location-dot text-[9px] mr-1"></i>${lvl.location}</span>
+                        </div>
+                    </div>
+                    <div>
+                        ${isCompleted ? '<i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>' :
+                          isCurrent ? '<span class="text-[10px] bg-cyan-500 text-slate-950 font-black px-2 py-0.5 rounded-full uppercase">Actual</span>' :
+                          isUnlocked ? '<i class="fa-solid fa-lock-open text-slate-400 text-xs"></i>' :
+                          '<i class="fa-solid fa-lock text-slate-600 text-xs"></i>'}
+                    </div>
+                `;
 
-            let raicesText = "";
-            let r1 = null, r2 = null;
-            if (delta > 0) {
-                r1 = (-b + Math.sqrt(delta)) / (2 * a);
-                r2 = (-b - Math.sqrt(delta)) / (2 * a);
-                raicesText = `x₁ = ${r1.toFixed(2)}, x₂ = ${r2.toFixed(2)}`;
-            } else if (delta === 0) {
-                r1 = -b / (2 * a);
-                raicesText = `x₁ = x₂ = ${r1.toFixed(2)} (Doble)`;
+                if(isUnlocked) {
+                    node.onclick = () => {
+                        player.currentLevel = index;
+                        renderMap();
+                    };
+                }
+
+                container.appendChild(node);
+            });
+
+            // Actualizar botón de iniciar nivel
+            const btnText = document.getElementById('btn-start-level-text');
+            if(player.currentLevel < levelsData.length) {
+                btnText.textContent = `Entrar a ${levelsData[player.currentLevel].title.split(':')[0]}`;
             } else {
-                raicesText = "Sin raíces reales (Δ < 0)";
+                btnText.textContent = `Ver Certificado Final`;
             }
-            document.getElementById('resRaices').innerText = raicesText;
-
-            const extremoTipo = a > 0 ? "Mínimo Absoluto" : "Máximo Absoluto";
-            document.getElementById('resExtremo').innerText = `${extremoTipo} (y = ${yv.toFixed(2)})`;
-
-            renderChart(a, b, c, xv, yv, r1, r2);
         }
 
-        function renderChart(a, b, c, xv, yv, r1, r2) {
-            const canvas = document.getElementById('parabolaChart');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-
-            const xMin = Math.floor(xv - 5);
-            const xMax = Math.ceil(xv + 5);
-            const points = [];
-            const labels = [];
-
-            for (let x = xMin; x <= xMax; x += 0.25) {
-                const y = a * x * x + b * x + c;
-                points.push({ x: parseFloat(x.toFixed(2)), y: parseFloat(y.toFixed(2)) });
-                labels.push(wrapLabel(`Punto en x = ${x.toFixed(1)}`));
+        // CONTINUAR / INGRESAR AL NIVEL SELECCIONADO
+        function continueToLevel() {
+            if(player.currentLevel >= levelsData.length) {
+                showVictoryScreen();
+                return;
             }
+            loadLevel(player.currentLevel);
+            switchScreen('screen-game');
+        }
 
-            const specialPoints = [{ x: parseFloat(xv.toFixed(2)), y: parseFloat(yv.toFixed(2)), label: 'Vértice V' }];
-            if (r1 !== null) specialPoints.push({ x: parseFloat(r1.toFixed(2)), y: 0, label: 'Raíz x₁' });
-            if (r2 !== null) specialPoints.push({ x: parseFloat(r2.toFixed(2)), y: 0, label: 'Raíz x₂' });
+        // CARGAR DATOS DEL NIVEL EN PANTALLA DE JUEGO
+        function loadLevel(levelIndex) {
+            const data = levelsData[levelIndex];
 
-            if (myChart) {
-                myChart.destroy();
-            }
+            document.getElementById('game-level-title').textContent = data.title;
+            document.getElementById('game-level-tag').textContent = data.tag;
+            document.getElementById('scenario-text').textContent = data.scenario;
+            document.getElementById('hint-text').textContent = '';
 
-            myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    datasets: [
-                        {
-                            label: 'Parábola f(x)',
-                            data: points,
-                            borderColor: '#0284c7',
-                            borderWidth: 3,
-                            fill: false,
-                            tension: 0.2,
-                            pointRadius: 0
-                        },
-                        {
-                            label: 'Puntos Notables',
-                            data: specialPoints,
-                            backgroundColor: '#f43f5e',
-                            borderColor: '#ffffff',
-                            borderWidth: 2,
-                            pointRadius: 6,
-                            pointHoverRadius: 8,
-                            showLine: false
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            grid: { color: '#e2e8f0' },
-                            title: { display: true, text: 'Eje X', color: '#64748b' }
-                        },
-                        y: {
-                            type: 'linear',
-                            grid: { color: '#e2e8f0' },
-                            title: { display: true, text: 'Eje Y', color: '#64748b' }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                boxWidth: 12,
-                                font: { size: 11 }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: function(tooltipItems) {
-                                    const item = tooltipItems[0];
-                                    let label = item.chart.data.labels ? item.chart.data.labels[item.dataIndex] : '';
-                                    if (Array.isArray(label)) {
-                                        return label.join(' ');
-                                    } else {
-                                        return label || `x: ${item.parsed.x}`;
-                                    }
-                                },
-                                label: function(context) {
-                                    if (context.dataset.label === 'Puntos Notables') {
-                                        const pt = context.raw;
-                                        return `${pt.label}: (${pt.x}, ${pt.y})`;
-                                    }
-                                    return `f(${context.parsed.x}) = ${context.parsed.y}`;
-                                }
-                            }
+            // Habilitar botón de pista
+            const hintBtn = document.getElementById('btn-hint');
+            hintBtn.disabled = false;
+            hintBtn.classList.remove('opacity-50');
+
+            // Cargar opciones
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            data.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "btn-touch w-full p-3 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 rounded-xl text-left text-xs text-slate-200 font-medium flex items-start gap-2.5 shadow-sm";
+                btn.innerHTML = `
+                    <span class="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 text-cyan-400 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+                        ${String.fromCharCode(65 + idx)}
+                    </span>
+                    <span class="leading-relaxed">${opt.text}</span>
+                `;
+                btn.onclick = () => handleAnswer(opt, data);
+                container.appendChild(btn);
+            });
+        }
+
+        // EVALUAR RESPUESTA DEL JUGADOR
+        function handleAnswer(selectedOption, levelData) {
+            if(selectedOption.correct) {
+                // Sumar Puntos
+                player.score += 50;
+                updateHUD();
+
+                // Avanzar Nivel unlocked
+                if(player.currentLevel === player.unlockedLevel) {
+                    player.unlockedLevel++;
+                }
+
+                showModal(
+                    true,
+                    "¡RESPUESTA CORRECTA!",
+                    selectedOption.reason,
+                    "+50 Puntos",
+                    () => {
+                        player.currentLevel++;
+                        if(player.currentLevel >= levelsData.length) {
+                            showVictoryScreen();
+                        } else {
+                            switchScreen('screen-map');
+                            renderMap();
                         }
                     }
+                );
+            } else {
+                // Restar Vida
+                player.lives--;
+                updateHUD();
+
+                if(player.lives <= 0) {
+                    showModal(
+                        false,
+                        "OPCIÓN INCORRECTA",
+                        selectedOption.reason,
+                        "Te quedaste sin vidas",
+                        () => {
+                            showGameOver();
+                        }
+                    );
+                } else {
+                    showModal(
+                        false,
+                        "OPCIÓN INCORRECTA",
+                        selectedOption.reason,
+                        `Te quedan ${player.lives} intento(s)`,
+                        () => {} // Se queda en la misma pantalla para reintentar
+                    );
                 }
-            });
+            }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            updateCalculations();
-        });
-
-        window.addEventListener('resize', () => {
-            if (myChart) {
-                myChart.resize();
+        // COMPRAR PISTA CON PUNTOS
+        function buyHint() {
+            if(player.score < 20) {
+                alert("Necesitás al menos 20 puntos para pedir una pista.");
+                return;
             }
-        });
+            player.score -= 20;
+            updateHUD();
+
+            const currentData = levelsData[player.currentLevel];
+            document.getElementById('hint-text').textContent = currentData.hint;
+
+            const hintBtn = document.getElementById('btn-hint');
+            hintBtn.disabled = true;
+            hintBtn.classList.add('opacity-50');
+        }
+
+        // MOSTRAR MODAL DE FEEDBACK
+        function showModal(isSuccess, title, desc, subtext, callback) {
+            const modal = document.getElementById('modal-feedback');
+            const iconBg = document.getElementById('modal-icon-bg');
+            const icon = document.getElementById('modal-icon');
+            const titleEl = document.getElementById('modal-title');
+            const descEl = document.getElementById('modal-desc');
+            const btn = document.getElementById('modal-btn');
+
+            if(isSuccess) {
+                iconBg.className = "w-14 h-14 rounded-full mx-auto flex items-center justify-center text-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-emerald-500/20";
+                icon.className = "fa-solid fa-check";
+                titleEl.className = "text-lg font-black text-emerald-400";
+                btn.className = "btn-touch w-full py-2.5 font-bold rounded-xl text-xs uppercase tracking-wider bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20";
+            } else {
+                iconBg.className = "w-14 h-14 rounded-full mx-auto flex items-center justify-center text-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 shadow-rose-500/20";
+                icon.className = "fa-solid fa-xmark";
+                titleEl.className = "text-lg font-black text-rose-400";
+                btn.className = "btn-touch w-full py-2.5 font-bold rounded-xl text-xs uppercase tracking-wider bg-rose-500 text-slate-950 shadow-lg shadow-rose-500/20";
+            }
+
+            titleEl.textContent = title;
+            descEl.innerHTML = `${desc} <br><strong class="block mt-2 text-[11px] text-cyan-300">${subtext}</strong>`;
+
+            window.modalCallback = callback;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-feedback').classList.add('hidden');
+            if(window.modalCallback) {
+                window.modalCallback();
+            }
+        }
+
+        // PANTALLA GAME OVER
+        function showGameOver() {
+            document.getElementById('go-score').textContent = player.score;
+            document.getElementById('go-level').textContent = player.currentLevel + 1;
+            switchScreen('screen-gameover');
+        }
+
+        // PANTALLA VICTORIA / CERTIFICADO
+        function showVictoryScreen() {
+            switchScreen('screen-victory');
+
+            // Rellenar certificado
+            document.getElementById('cert-name').textContent = player.name || "Estudiante";
+            document.getElementById('cert-school').textContent = player.school || "Escuela Secundaria - La Plata";
+            document.getElementById('cert-score').textContent = `${player.score} pts`;
+
+            // Rango
+            let rank = "Especialista Digital NTICx";
+            if(player.score >= 350) rank = "Maestro de la Alfabetización Digital";
+            document.getElementById('cert-rank').textContent = rank;
+
+            // Fecha actual
+            const now = new Date();
+            const dateStr = `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getFullYear()}`;
+            document.getElementById('cert-date').textContent = dateStr;
+
+            // Lanzar Confeti
+            try {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            } catch(e){}
+        }
+
+        // COMPARTIR RESULTADO VÍA WHATSAPP / WEB SHARE API
+        function shareResult() {
+            const shareText = `🎓 ¡Completé el juego Misión NTICx (Módulo 5)! \n👤 Alumno: ${player.name}\n🏫 Escuela: ${player.school}\n🏆 Puntaje: ${player.score} pts\n📱 Misión cumplida desde mi celular.`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Certificado Misión NTICx',
+                    text: shareText
+                }).catch(() => {});
+            } else {
+                // Fallback a WhatsApp
+                const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+                window.open(url, '_blank');
+            }
+        }
+
+        // REINICIAR TODO
+        function resetGame() {
+            player.score = 0;
+            player.lives = 3;
+            player.currentLevel = 0;
+            player.unlockedLevel = 0;
+            updateHUD();
+            switchScreen('screen-map');
+            renderMap();
+        }
     </script>
 </body>
 </html>
+```eof
+
+### ¿Cómo funciona y cómo compartirlo con los alumnos?
+
+1. **Uso inmediato en celulares:**
+   - El archivo generado (`juego_nticx_modulo5.html`) funciona directo en cualquier navegador móvil (Chrome, Safari, Firefox).
+   - No requiere descargar aplicaciones ni instalar programas.
+
+2. **Mecanica del Juego ("Misión NTICx: La Plata"):**
+   - **Registro inicial:** El alumno ingresa su nombre y curso/escuela.
+   - **Ruta de 8 Niveles Tácticos:** Basados en los conceptos del Módulo 5 (Prosumidor, Ubicuidad, Tercer Entorno, Clickbait, Wikis, Blogofolios, Sincronía/Asincronía y WebQuest).
+   - **Sistema de Puntos, Vidas y Pistas:** Fomenta la relectura y la reflexión sobre los errores.
+   - **Certificado Digital Final:** Al completar los 8 niveles, el juego genera automáticamente una **Credencial/Certificado de Aprobación** personalizado con su nombre, escuela, puntaje y fecha.
+   - **Botón "Compartir con el Profe":** Permite al estudiante enviar un mensaje directo por WhatsApp o correo al docente confirmando que completó la actividad con su puntaje correspondiente.
+
+3. **Formas simples de distribución:**
+   - Podés subir este archivo `.html` a **Google Drive**, **Google Classroom** o mandarlo adjunto por **WhatsApp/Telegram** al grupo del curso para que lo abran en sus teléfonos.
